@@ -33,7 +33,7 @@ export class EmacsEmulator implements Disposable, IEmacsCommandRunner, IMarkMode
 
   // tslint:disable-next-line:variable-name
   private _isInMarkMode = false;
-  public get isInMarkMode() {
+  public get isInMarkMode(): boolean {
     return this._isInMarkMode;
   }
 
@@ -95,7 +95,7 @@ export class EmacsEmulator implements Disposable, IEmacsCommandRunner, IMarkMode
     this.commandRegistry.register(new CaseCommands.TransformToLowercase(this.afterCommand, this));
   }
 
-  public setTextEditor(textEditor: TextEditor) {
+  public setTextEditor(textEditor: TextEditor): void {
     this.textEditor = textEditor;
     this.killYanker.setTextEditor(textEditor);
   }

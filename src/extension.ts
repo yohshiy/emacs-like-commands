@@ -7,8 +7,9 @@ import { executeCommands } from "./execute-commands";
 import { KillRing } from "./kill-yank/kill-ring";
 import { initializeLogger, logger } from "./logger";
 import { MessageManager } from "./message";
+import { insertString } from "./utils";
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
   MessageManager.initialize(context);
   Configuration.initialize(context);
 
@@ -20,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
   const emulatorMap = new EmacsEmulatorMap(killRing);
   context.subscriptions.push(emulatorMap);
 
-  function getAndUpdateEmulator() {
+  function getAndUpdateEmulator(): EmacsEmulator | undefined {
     const activeTextEditor = vscode.window.activeTextEditor;
     if (typeof activeTextEditor === "undefined") {
       return undefined;
@@ -54,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
     commandName: string,
     callback: (emulator: EmacsEmulator, ...args: any[]) => any,
     onNoEmulator?: (...args: any[]) => any
-  ) {
+  ): void {
     const disposable = vscode.commands.registerCommand(commandName, (...args) => {
       logger.debug(`[command]\t Command executed: "${commandName}"`);
 
@@ -189,9 +190,14 @@ export function activate(context: vscode.ExtensionContext) {
       executeCommands(args[0]);
     }
   });
+
+  const atdisposable = vscode.commands.registerCommand("el-cmds.insertKeyChar", () => {
+    insertString("@");
+  });
+  context.subscriptions.push(atdisposable);
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
+export function deactivate(): void {
   return;
 }
